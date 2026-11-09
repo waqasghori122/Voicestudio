@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VoiceStudio - Free Text to Speech Online (Urdu, English, Hindi, Arabic)</title>
+<meta name="description" content="Free text to speech studio. Turn scripts into voice with browser voices, or connect your own ElevenLabs API key to create and download MP3 voiceovers.">
+<script>try{var t=localStorage.getItem("vt")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.dataset.theme=t}catch(e){}</script>
+<style>
+:root{--bg:#fafafa;--card:#fff;--ink:#0b0b0f;--mut:#6b7280;--line:#e5e7eb;--pri:#111827;--acc:#6366f1;--ok:#059669;--bad:#dc2626}
+[data-theme=dark]{--bg:#0a0a0f;--card:#14141c;--ink:#f3f4f6;--mut:#9ca3af;--line:#262633;--pri:#f9fafb;--acc:#818cf8}
+*{box-sizing:border-box}body{margin:0;font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink)}
+.wrap{max-width:900px;margin:0 auto;padding:0 16px}
+header{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.hb{display:flex;align-items:center;gap:8px;padding:10px 0}.logo{font-weight:800;font-size:1.15rem;display:flex;gap:8px;align-items:center}.logo i{font-style:normal;width:32px;height:32px;flex:none;border-radius:10px;background:linear-gradient(135deg,#6366f1,#ec4899);display:grid;place-items:center;color:#fff}
+.sp{flex:1}.tabs{display:flex;gap:5px}.logo{white-space:nowrap}.tab{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:99px;padding:6px 11px;font:inherit;font-size:.85rem;cursor:pointer;white-space:nowrap}.tab.on{background:var(--pri);color:var(--bg);border-color:var(--pri)}
+h1{font-size:clamp(1.5rem,5vw,2.2rem);text-align:center;margin:34px 0 6px}.sub{text-align:center;color:var(--mut);margin:0 0 20px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px}
+textarea,select,input[type=text],input[type=password]{width:100%;padding:12px;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:12px}
+textarea{min-height:190px;resize:vertical;font-size:1.02rem}
+textarea:focus,select:focus,input:focus{outline:0;border-color:var(--acc);box-shadow:0 0 0 3px color-mix(in srgb,var(--acc) 22%,transparent)}
+.row{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px}.row>div{flex:1 1 200px}label{display:block;font-size:.8rem;font-weight:600;color:var(--mut);margin-bottom:4px}
+.meta{display:flex;justify-content:space-between;color:var(--mut);font-size:.85rem;margin-top:6px;gap:8px;flex-wrap:wrap}
+.btn{border:0;border-radius:12px;padding:12px 20px;font:inherit;font-weight:700;cursor:pointer;background:var(--pri);color:var(--bg)}.btn.alt{background:none;color:var(--ink);border:1px solid var(--line);font-weight:600}.btn:disabled{opacity:.5;cursor:not-allowed}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:12px;overflow:hidden}.seg button{border:0;background:var(--bg);color:var(--ink);padding:9px 16px;font:inherit;cursor:pointer}.seg button.on{background:var(--acc);color:#fff}
+.chk{display:flex;gap:8px;align-items:center;font-size:.9rem;margin-top:12px}.chk input{width:18px;height:18px}
+#st{margin-top:12px;font-size:.92rem;min-height:1.4em}.ok{color:var(--ok)}.bad{color:var(--bad)}
+audio{width:100%;margin-top:12px}
+h2{font-size:1.1rem;margin:30px 0 10px}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.q{text-align:left;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;cursor:pointer;color:var(--ink);font:inherit}.q:hover{border-color:var(--acc)}.q b{display:block}.q span{font-size:.82rem;color:var(--mut)}
+.rc{display:flex;justify-content:space-between;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--card);margin-bottom:8px;cursor:pointer;font-size:.9rem}.rc small{color:var(--mut)}
+.note{font-size:.84rem;color:var(--mut)}.pane{display:none}.pane.on{display:block}
+@media(max-width:430px){.hb{gap:6px}.logo{font-size:1rem}.logo i{width:28px;height:28px}.tab{padding:6px 9px;font-size:.8rem}.tabs{gap:4px}.btn{padding:11px 16px}}
+@media(max-width:350px){.logo span{display:none}}
+footer{margin:40px 0 20px;text-align:center;color:var(--mut);font-size:.85rem}
+</style>
+</head>
+<body>
+<header><div class="wrap hb"><div class="logo"><i>&#127908;</i><span>VoiceStudio</span></div><div class="sp"></div>
+<div class="tabs"><button class="tab on" data-p="tts">Speech</button><button class="tab" data-p="set">Settings</button><button class="tab" id="th" aria-label="Theme">&#127763;</button></div></div></header>
+<main class="wrap">
+<section id="tts" class="pane on">
+<h1>What would you like to create?</h1><p class="sub">Type or paste a script, pick a voice and press Generate.</p>
+<div class="card">
+<div class="seg" role="group" aria-label="Voice engine"><button id="e1" class="on">Browser voices (free)</button><button id="e2">ElevenLabs API (your key)</button></div>
+<textarea id="txt" placeholder="Write your script here. Use [pause 2s] to add a pause. Lines like [Scene name] and (visual notes) can be removed automatically." aria-label="Script"></textarea>
+<div class="meta"><span id="cnt">0 characters</span><span id="est"></span></div>
+<label class="chk"><input type="checkbox" id="cln" checked> Remove [labels] and (scene notes) before speaking</label>
+<div class="row"><div><label for="lang">Language</label><select id="lang"></select></div><div><label for="voice">Voice</label><select id="voice"></select></div></div>
+<div class="row" id="bx"><div><label>Speed: <span id="rv">1.0</span></label><input type="range" id="rate" min="0.5" max="1.5" step="0.05" value="1"></div><div><label>Pitch: <span id="pv">1.0</span></label><input type="range" id="pitch" min="0.5" max="1.5" step="0.05" value="1"></div><div><label>Volume: <span id="vv">1.0</span></label><input type="range" id="vol" min="0" max="1" step="0.05" value="1"></div></div>
+<div class="row" id="ex" style="display:none"><div><label for="mdl">Model</label><select id="mdl"><option value="eleven_multilingual_v2">Multilingual v2 (best quality)</option><option value="eleven_turbo_v2_5">Turbo v2.5 (faster, half credits)</option><option value="eleven_flash_v2_5">Flash v2.5 (fastest, half credits)</option></select></div><div><label>Stability: <span id="sv">0.5</span></label><input type="range" id="stab" min="0" max="1" step="0.05" value="0.5"></div><div><label>Similarity: <span id="mv">0.75</span></label><input type="range" id="sim" min="0" max="1" step="0.05" value="0.75"></div></div>
+<div class="btns"><button class="btn" id="go">Generate</button><button class="btn alt" id="ps" disabled>Pause</button><button class="btn alt" id="sp2" disabled>Stop</button><a class="btn alt" id="dl" style="display:none;text-decoration:none" download="voiceover.mp3">Download MP3</a></div>
+<div id="st" aria-live="polite"></div><audio id="au" controls style="display:none"></audio>
+</div>
+<h2>Quickstarts</h2><div class="grid" id="qs"></div>
+<h2>Recents</h2><div id="rcs"><p class="note">Nothing yet. Your last scripts are saved here, only in this browser.</p></div>
+</section>
+<section id="set" class="pane">
+<h1>Settings</h1><p class="sub">Connect your own ElevenLabs account for studio-quality voices and MP3 download.</p>
+<div class="card"><label for="key">ElevenLabs API key</label><input type="password" id="key" placeholder="sk_..." autocomplete="off">
+<div class="btns"><button class="btn" id="sk">Save and load voices</button><button class="btn alt" id="ck">Remove key</button></div><div id="ks" class="note" style="margin-top:10px"></div>
+<p class="note">Your key is stored only in this browser (localStorage) and is sent only to api.elevenlabs.io. Never share your key or paste it on a computer you do not own. Audio made with the API uses your ElevenLabs credits.</p></div>
+<div class="card" style="margin-top:14px"><b>Free browser voices</b><p class="note">These use the voices installed on your phone or computer. Quality and language support (for example Urdu) depend on your device. They cannot be saved as an MP3 file. For MP3 files, use the ElevenLabs API mode.</p></div>
+</section>
+</main>
+<footer>VoiceStudio is an independent tool and is not affiliated with ElevenLabs.</footer>
+<script>
+var $=function(i){return document.getElementById(i)},Q=function(s){return Array.prototype.slice.call(document.querySelectorAll(s))};
+var LS=function(k,d){try{var v=JSON.parse(localStorage.getItem(k));return v==null?d:v}catch(e){return d}},SV=function(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+var QS=[["Morning Prayer","Short devotional","[Opening]\nGood morning, my dear friends. Let us begin this day in prayer.\n[pause 1s]\nHeavenly Father, thank You for a new morning. Give us peace in our hearts, strength in our work, and kindness for everyone we meet. Amen."],
+["Bedtime Story","Calm and slow","Once upon a time, in a quiet little village, there lived a small star who was afraid of the dark.\n[pause 1s]\nEvery night she looked at the sleeping world and whispered, I will be brave tomorrow. And slowly, she began to shine."],
+["Nursery Rhyme","Fun for kids","Twinkle, twinkle, little star, how I wonder what you are.\n[pause 1s]\nUp above the world so high, like a diamond in the sky."],
+["Product Ad","30 seconds","Tired of slow mornings? Meet BrightBrew, the coffee maker that is ready before you are.\n[pause 1s]\nFresh coffee in sixty seconds. Order today and get free delivery."],
+["YouTube Intro","Welcome script","Welcome back to the channel! If you are new here, please subscribe and press the bell icon.\n[pause 1s]\nToday we have something special for you, so let us get started."],
+["Urdu Greeting","Urdu sample","السلام علیکم! آپ کا ہماری ویب سائٹ پر خوش آمدید۔ آج ہم آپ کے لیے ایک نئی چیز لے کر آئے ہیں۔"]];
+var eng=LS("eng","b"),voices=[],ev=[],cur=null,stopped=false,paused=false;
+var BV="21m00Tcm4TlvDq8ikWAM";
+function status(m,c){var s=$("st");s.textContent=m||"";s.className=c||""}
+function clean(t){if($("cln").checked)t=t.replace(/\[(?!\s*pause)[^\]]*\]/gi,"").replace(/\([^)]*\)/g,"");return t}
+function segs(t){t=clean(t);var out=[],re=/\[\s*pause\s*(\d+(?:\.\d+)?)\s*s?\s*\]/gi,l=0,m;while((m=re.exec(t))){out.push({s:t.slice(l,m.index)});out.push({p:Math.min(10,+m[1])*1000});l=re.lastIndex}out.push({s:t.slice(l)});return out.filter(function(x){return x.p||(x.s&&x.s.trim())})}
+function chunks(s,max){var parts=s.match(/[^.!?\u06D4\u061F\n]+[.!?\u06D4\u061F]*\s*/g)||[s],o=[],c="";parts.forEach(function(p){if((c+p).length>max&&c){o.push(c.trim());c=""}c+=p;while(c.length>max){o.push(c.slice(0,max));c=c.slice(max)}});if(c.trim())o.push(c.trim());return o}
+function upd(){var t=$("txt").value,n=clean(t).replace(/\[\s*pause[^\]]*\]/gi,"").length;$("cnt").textContent=n.toLocaleString()+" characters";var w=(clean(t).match(/\S+/g)||[]).length,m=w/150;$("est").textContent=w?"About "+(m<1?Math.round(m*60)+" sec":m.toFixed(1)+" min")+" of audio"+(eng==="e"?" | about "+Math.ceil(n*($("mdl").value==="eleven_multilingual_v2"?1:.5)).toLocaleString()+" credits":""):""}
+// ----- voices -----
+function loadB(){voices=speechSynthesis.getVoices?speechSynthesis.getVoices():[];fillLang()}
+function fillLang(){var L=$("lang"),keep=L.value;if(eng==="e"){L.innerHTML='<option value="">All voices</option>';L.disabled=true}else{L.disabled=false;var s={};voices.forEach(function(v){s[v.lang.split("-")[0].toLowerCase()]=1});var k=Object.keys(s).sort();L.innerHTML='<option value="">All languages</option>'+k.map(function(x){return'<option value="'+x+'">'+x.toUpperCase()+'</option>'}).join("");if(keep)L.value=keep}fillVoice()}
+function fillVoice(){var V=$("voice"),l=$("lang").value;if(eng==="e"){V.innerHTML=(ev.length?ev:[{voice_id:BV,name:"Default voice (add your key to load more)"}]).map(function(v){return'<option value="'+v.voice_id+'">'+v.name+'</option>'}).join("");var sv=LS("ev","");if(sv)V.value=sv}else{var f=voices.filter(function(v){return!l||v.lang.toLowerCase().indexOf(l)===0});V.innerHTML=f.length?f.map(function(v,i){return'<option value="'+v.voiceURI+'">'+v.name+" ("+v.lang+")"+'</option>'}).join(""):'<option value="">No voices found on this device</option>'}}
+function setEng(x){eng=x;SV("eng",x);$("e1").className=x==="b"?"on":"";$("e2").className=x==="e"?"on":"";$("bx").style.display=x==="b"?"":"none";$("ex").style.display=x==="e"?"":"none";fillLang();upd();status("")}
+// ----- browser TTS -----
+function speakB(){var vs=voices.filter(function(v){return v.voiceURI===$("voice").value})[0],q=[];segs($("txt").value).forEach(function(g){if(g.p)q.push({p:g.p});else chunks(g.s,180).forEach(function(c){q.push({s:c})})});if(!q.length){status("Please write some text first.","bad");return}
+stopped=false;paused=false;$("go").disabled=true;$("ps").disabled=false;$("sp2").disabled=false;status("Speaking...");var i=0;
+(function next(){if(stopped||i>=q.length){done(stopped?"Stopped.":"Finished.");return}var it=q[i++];if(it.p){cur=setTimeout(next,it.p);return}var u=new SpeechSynthesisUtterance(it.s);if(vs){u.voice=vs;u.lang=vs.lang}u.rate=+$("rate").value;u.pitch=+$("pitch").value;u.volume=+$("vol").value;u.onend=next;u.onerror=function(e){if(!stopped&&e.error!=="interrupted"&&e.error!=="canceled"){status("Speech error: "+e.error,"bad")}next()};speechSynthesis.speak(u)})()}
+function done(m){$("go").disabled=false;$("ps").disabled=true;$("sp2").disabled=true;$("ps").textContent="Pause";status(m,"ok")}
+// ----- ElevenLabs API -----
+async function genE(){var key=LS("key","");if(!key){status("Add your ElevenLabs API key in Settings first.","bad");return}var out=[];segs($("txt").value).forEach(function(g){if(g.p)out.push({p:Math.min(3,g.p/1000)});else chunks(g.s,2400).forEach(function(c){out.push({s:c})})});if(!out.length){status("Please write some text first.","bad");return}
+var texts=[],buf="";out.forEach(function(x){if(x.p){buf+=' <break time="'+x.p.toFixed(1)+'s" /> '}else{if(buf&&(buf+x.s).length>2400){texts.push(buf);buf=""}buf+=x.s}});if(buf.trim())texts.push(buf);
+$("go").disabled=true;$("dl").style.display="none";var parts=[];
+try{for(var i=0;i<texts.length;i++){status("Generating audio "+(i+1)+" of "+texts.length+"...");var r=await fetch("https://api.elevenlabs.io/v1/text-to-speech/"+encodeURIComponent($("voice").value||BV)+"?output_format=mp3_44100_128",{method:"POST",headers:{"xi-api-key":key,"Content-Type":"application/json","Accept":"audio/mpeg"},body:JSON.stringify({text:texts[i],model_id:$("mdl").value,voice_settings:{stability:+$("stab").value,similarity_boost:+$("sim").value}})});if(!r.ok){var m="";try{var j=await r.json();m=(j.detail&&(j.detail.message||j.detail))||""}catch(e){}throw new Error(r.status+(m?" - "+(typeof m==="string"?m:JSON.stringify(m)):""))}parts.push(await r.blob())}
+var b=new Blob(parts,{type:"audio/mpeg"}),u=URL.createObjectURL(b);$("au").src=u;$("au").style.display="block";$("dl").href=u;$("dl").style.display="inline-block";status("Done. Press play or download the MP3.","ok")}catch(e){status("Could not generate audio: "+e.message+(String(e.message).indexOf("401")===0?" (check your API key)":""),"bad")}$("go").disabled=false}
+async function loadE(){var key=LS("key","");$("ks").textContent="";if(!key)return;try{var r=await fetch("https://api.elevenlabs.io/v1/voices",{headers:{"xi-api-key":key}});if(!r.ok)throw new Error(r.status);var j=await r.json();ev=(j.voices||[]).map(function(v){return{voice_id:v.voice_id,name:v.name}});$("ks").textContent="Key saved. "+ev.length+" voices loaded.";$("ks").className="note ok";fillVoice()}catch(e){$("ks").textContent="Could not load voices ("+e.message+"). Check the key or your internet connection.";$("ks").className="note bad"}}
+// ----- recents / templates -----
+function recents(add){var a=LS("rc",[]);if(add){a=a.filter(function(x){return x.t!==add.t});a.unshift(add);a=a.slice(0,12);SV("rc",a)}var h=a.map(function(x,i){return'<div class="rc" data-i="'+i+'"><span>'+x.t.slice(0,70).replace(/</g,"&lt;")+(x.t.length>70?"...":"")+'</span><small>'+x.e+"</small></div>"}).join("");$("rcs").innerHTML=h||'<p class="note">Nothing yet. Your last scripts are saved here, only in this browser.</p>'}
+$("rcs").onclick=function(e){var r=e.target.closest(".rc");if(!r)return;$("txt").value=LS("rc",[])[+r.dataset.i].t;upd();scrollTo(0,0)};
+$("qs").innerHTML=QS.map(function(q,i){return'<button class="q" data-i="'+i+'"><b>'+q[0]+"</b><span>"+q[1]+"</span></button>"}).join("");
+$("qs").onclick=function(e){var b=e.target.closest(".q");if(!b)return;$("txt").value=QS[+b.dataset.i][2];upd();scrollTo(0,0)};
+// ----- wiring -----
+$("go").onclick=function(){recents({t:$("txt").value.trim(),e:eng==="b"?"Browser":"ElevenLabs"});if(!$("txt").value.trim()){status("Please write some text first.","bad");return}if(eng==="b"){if(!window.speechSynthesis){status("This browser does not support speech.","bad");return}speechSynthesis.cancel();speakB()}else genE()};
+$("ps").onclick=function(){if(paused){speechSynthesis.resume();paused=false;$("ps").textContent="Pause"}else{speechSynthesis.pause();paused=true;$("ps").textContent="Resume"}};
+$("sp2").onclick=function(){stopped=true;clearTimeout(cur);speechSynthesis.cancel();done("Stopped.")};
+$("e1").onclick=function(){setEng("b")};$("e2").onclick=function(){setEng("e")};$("lang").onchange=fillVoice;$("voice").onchange=function(){if(eng==="e")SV("ev",$("voice").value)};
+["txt","cln","mdl"].forEach(function(i){$(i).oninput=upd;$(i).onchange=upd});
+[["rate","rv"],["pitch","pv"],["vol","vv"],["stab","sv"],["sim","mv"]].forEach(function(p){$(p[0]).oninput=function(){$(p[1]).textContent=(+this.value).toFixed(2).replace(/0$/,"")}});
+$("sk").onclick=function(){SV("key",$("key").value.trim());loadE()};$("ck").onclick=function(){SV("key","");$("key").value="";ev=[];fillVoice();$("ks").textContent="Key removed.";$("ks").className="note"};
+Q(".tab[data-p]").forEach(function(b){b.onclick=function(){Q(".tab[data-p]").forEach(function(x){x.className="tab"});b.className="tab on";Q(".pane").forEach(function(p){p.className="pane"});$(b.dataset.p).className="pane on"}});
+$("th").onclick=function(){var t=document.documentElement.dataset.theme==="dark"?"light":"dark";document.documentElement.dataset.theme=t;try{localStorage.setItem("vt",t)}catch(e){}};
+if(window.speechSynthesis){loadB();speechSynthesis.onvoiceschanged=loadB}
+$("key").value=LS("key","")?"********":"";if(LS("key","")){loadE()}
+$("key").onfocus=function(){if(this.value==="********")this.value=""};
+setEng(eng);recents();upd();
+</script>
+</body>
+</html>
